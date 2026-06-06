@@ -13,17 +13,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fic.mobile_app_base_compose.data.local.Usuario
 
 @Composable
 fun LoginScreen(
-    onLoginIntent: (String, String, com.fic.mobile_app_base_compose.ui.screens.RolUsuario, String) -> com.fic.mobile_app_base_compose.ui.screens.AppUser?,
-    onLoginExitoso: (AppUser) -> Unit
+    onLoginExitoso: (Usuario) -> Unit,
+    validarUsuario: (String, String) -> Usuario?
 ) {
-    var txtCodigoDocente by remember { mutableStateOf("") }
-    var txtCorreo by remember { mutableStateOf("") }
-    var txtPassword by remember { mutableStateOf("") }
-    var switchDocente by remember { mutableStateOf(false) }
-    var ErrorMensaje by remember { mutableStateOf<String?>(null) }
+    var matricula by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var error by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -33,25 +32,31 @@ fun LoginScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("FACULTAD DE INFORMÁTICA", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Color(0xFF0F2027))
-        Text("Portal de Accesos", fontSize = 14.sp, color = Color.Gray)
+        Text(
+            text = "FACULTAD DE INFORMÁTICA",
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF0F2027)
+        )
+        Text("Muro Académico", fontSize = 14.sp, color = Color.Gray)
+        Text("Inicio por matrícula y contraseña", fontSize = 13.sp, color = Color.Gray)
 
         Spacer(modifier = Modifier.height(32.dp))
 
         OutlinedTextField(
-            value = txtCorreo,
-            onValueChange = { txtCorreo = it; ErrorMensaje = null },
-            label = { Text("Correo Institucional (@info.uas.edu.mx)") },
+            value = matricula,
+            onValueChange = { matricula = it.uppercase(); error = "" },
+            label = { Text("Matrícula") },
+            placeholder = { Text("Ejemplo: M001 o A001") },
             modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+            singleLine = true
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(14.dp))
 
         OutlinedTextField(
-            value = txtPassword,
-            onValueChange = { txtPassword = it },
+            value = password,
+            onValueChange = { password = it; error = "" },
             label = { Text("Contraseña") },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
@@ -59,60 +64,28 @@ fun LoginScreen(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = if (switchDocente) "Ingresar como: DOCENTE 👨‍🏫" else "Ingresar como: ALUMNO 👨‍🎓",
-                fontWeight = FontWeight.Medium
-            )
-            Switch(
-                checked = switchDocente,
-                onCheckedChange = { switchDocente = it }
-            )
+        if (error.isNotBlank()) {
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(error, color = Color.Red, fontSize = 13.sp)
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
-
-        if (switchDocente) {
-            Spacer(modifier = Modifier.height(16.dp))
-            OutlinedTextField(
-                value = txtCodigoDocente,
-                onValueChange = { txtCodigoDocente = it; ErrorMensaje = null },
-                label = { Text("Codigo de Seguridad Docente") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-            )
-        }
-
-        ErrorMensaje?.let {
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = it, color = Color.Red, fontSize = 14.sp, fontWeight = FontWeight.Bold)
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(28.dp))
 
         Button(
             onClick = {
-                val rol = if (switchDocente) com.fic.mobile_app_base_compose.ui.screens.RolUsuario.DOCENTE else com.fic.mobile_app_base_compose.ui.screens.RolUsuario.ALUMNO
-
-                val usuarioLogueado = onLoginIntent(txtCorreo, txtPassword, rol, txtCodigoDocente)
-
-                if (usuarioLogueado != null) {
-                    onLoginExitoso(usuarioLogueado)
+                val usuario = validarUsuario(matricula, password)
+                if (usuario != null) {
+                    onLoginExitoso(usuario)
                 } else {
-                    ErrorMensaje = "Correo o contraseña incorrectos"
+                    error = "Matrícula o contraseña incorrecta"
                 }
             },
-            modifier = Modifier.fillMaxWidth().height(50.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0F2027))
         ) {
-            Text("INGRESAR", color = Color.White, fontWeight = FontWeight.Bold)
+            Text("INICIAR SESIÓN", color = Color.White, fontWeight = FontWeight.Bold)
         }
     }
 }

@@ -16,7 +16,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fic.mobile_app_base_compose.ui.screens.TarjetaAviso
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -24,6 +23,7 @@ fun MuroAvisosScreen(
     nombreUsuario: String,
     esDocente: Boolean,
     listaAvisos: List<Aviso>,
+    onPublicarAviso: (Aviso) -> Unit,
     onCerrarSesion: () -> Unit
 ) {
     var mostrarDialogo by remember { mutableStateOf(false) }
@@ -109,7 +109,7 @@ fun MuroAvisosScreen(
                 nombreDocente = nombreUsuario,
                 onDismiss = { mostrarDialogo = false },
                 onPublicar = { nuevoAviso ->
-                    (listaAvisos as MutableList).add(0, nuevoAviso)
+                    onPublicarAviso(nuevoAviso)
                     mostrarDialogo = false
                 }
             )
