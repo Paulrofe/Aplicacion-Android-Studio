@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.fic.mobile_app_base_compose.data.remote.AvisoApiDto
 import com.fic.mobile_app_base_compose.ui.screens.Aviso
 
 const val ROL_DOCENTE = "DOCENTE"
@@ -36,10 +37,12 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             """
             CREATE TABLE avisos (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                apiId INTEGER UNIQUE,
                 docente TEXT NOT NULL,
                 materia TEXT NOT NULL,
                 mensaje TEXT NOT NULL,
                 esUrgente INTEGER NOT NULL,
+                origen TEXT NOT NULL DEFAULT 'LOCAL',
                 fecha TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
             )
             """.trimIndent()
@@ -106,8 +109,39 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             put("materia", materia.trim())
             put("mensaje", mensaje.trim())
             put("esUrgente", if (esUrgente) 1 else 0)
+            put("origen", "LOCAL")
         }
         writableDatabase.insert("avisos", null, values)
+    }
+
+    fun guardarAvisosExternos(avisosApi: List<AvisoApiDto>) {
+        val db = writableDatabase
+
+        // Evita que se acumulen muchas publicaciones de prueba de la API.
+        // Los avisos creados por docentes se conservan porque tienen origen LOCAL.
+        db.delete("avisos", "origen = ?", arrayOf("API"))
+
+        avisosApi.forEach { avisoApi ->
+            val values = ContentValues().apply {
+                put("apiId", avisoApi.id)
+                put("docente", "API externa REST")
+                put("materia", "Noticia académica")
+                put(
+                    "mensaje",
+                    "Aviso académico sincronizado desde una API externa.\n\n" +
+                            "La aplicación descargó información en línea y la guardó en la base de datos local para poder consultarla sin conexión."
+                )
+                put("esUrgente", 0)
+                put("origen", "API")
+            }
+
+            db.insertWithOnConflict(
+                "avisos",
+                null,
+                values,
+                SQLiteDatabase.CONFLICT_REPLACE
+            )
+        }
     }
 
     private fun insertarUsuariosIniciales(db: SQLiteDatabase) {
@@ -123,7 +157,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             Usuario(0, "A003", "Alumno Uriel Retamoza", ROL_ALUMNO, "123456"),
             Usuario(0, "A004", "Alumno Axel Alejandro", ROL_ALUMNO, "123456"),
 
-        )
+            )
 
         usuarios.forEach { usuario ->
             val values = ContentValues().apply {
@@ -138,6 +172,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     companion object {
         private const val DATABASE_NAME = "muro_academico.db"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2
     }
 }

@@ -47,7 +47,7 @@ fun LoginScreen(
             value = matricula,
             onValueChange = { matricula = it.uppercase(); error = "" },
             label = { Text("Matrícula") },
-            placeholder = { Text("Ejemplo: M001 o A001") },
+            placeholder = { Text("") },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true
         )

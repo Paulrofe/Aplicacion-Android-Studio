@@ -23,6 +23,8 @@ fun MuroAvisosScreen(
     nombreUsuario: String,
     esDocente: Boolean,
     listaAvisos: List<Aviso>,
+    estadoSincronizacion: String,
+    onSincronizar: () -> Unit,
     onPublicarAviso: (Aviso) -> Unit,
     onCerrarSesion: () -> Unit
 ) {
@@ -66,6 +68,11 @@ fun MuroAvisosScreen(
                             DropdownMenuItem(
                                 text = { Text("Agrupar por Materia", fontWeight = if (filtroActual == "Por Materia") FontWeight.Bold else FontWeight.Normal) },
                                 onClick = { filtroActual = "Por Materia"; menuExpandido = false }
+                            )
+                            HorizontalDivider()
+                            DropdownMenuItem(
+                                text = { Text("Sincronizar API externa") },
+                                onClick = { onSincronizar(); menuExpandido = false }
                             )
                         }
                     }
@@ -122,7 +129,10 @@ fun MuroAvisosScreen(
         ) {
             item {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text("Publicaciones del día", fontSize = 14.sp, color = Color.Gray)
+                    Column {
+                        Text("Publicaciones del día", fontSize = 14.sp, color = Color.Gray)
+                        Text(estadoSincronizacion, fontSize = 12.sp, color = Color.Gray)
+                    }
                     Text("Filtro: $filtroActual", fontSize = 12.sp, color = Color(0xFF00E5FF), fontWeight = FontWeight.Bold)
                 }
             }
