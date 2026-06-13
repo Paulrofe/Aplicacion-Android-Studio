@@ -42,9 +42,10 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 materia TEXT NOT NULL,
                 mensaje TEXT NOT NULL,
                 esUrgente INTEGER NOT NULL,
+                archivoUri TEXT, -- NUEVA COLUMNA
                 origen TEXT NOT NULL DEFAULT 'LOCAL',
                 fecha TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-            )
+                )
             """.trimIndent()
         )
 
@@ -103,13 +104,14 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return avisos
     }
 
-    fun guardarAviso(docente: String, materia: String, mensaje: String, esUrgente: Boolean) {
+    fun guardarAviso(docente: String, materia: String, mensaje: String, esUrgente: Boolean, archivoUri: String?) {
         val values = ContentValues().apply {
             put("docente", docente.trim())
             put("materia", materia.trim())
             put("mensaje", mensaje.trim())
             put("esUrgente", if (esUrgente) 1 else 0)
             put("origen", "LOCAL")
+            put("archivoUri", archivoUri)
         }
         writableDatabase.insert("avisos", null, values)
     }
@@ -172,6 +174,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     companion object {
         private const val DATABASE_NAME = "muro_academico.db"
-        private const val DATABASE_VERSION = 2
+        private const val DATABASE_VERSION = 3
     }
 }

@@ -14,13 +14,15 @@ class AvisosRepository(
         docente: String,
         materia: String,
         mensaje: String,
-        esUrgente: Boolean
+        esUrgente: Boolean,
+        archivoUri: String? = null // NUEVO PARÁMETRO
     ) {
         databaseHelper.guardarAviso(
             docente = docente,
             materia = materia,
             mensaje = mensaje,
-            esUrgente = esUrgente
+            esUrgente = esUrgente,
+            archivoUri = archivoUri // NUEVO PARAMETRO
         )
     }
 

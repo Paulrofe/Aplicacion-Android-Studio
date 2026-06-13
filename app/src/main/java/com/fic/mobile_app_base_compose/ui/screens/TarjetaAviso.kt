@@ -10,9 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 
 @Composable
 fun TarjetaAviso(aviso: Aviso) {
@@ -39,6 +41,19 @@ fun TarjetaAviso(aviso: Aviso) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(aviso.mensaje, fontSize = 14.sp)
             Spacer(modifier = Modifier.height(8.dp))
+
+            if (aviso.archivoUri != null) {
+                AsyncImage(
+                    model = aviso.archivoUri,
+                    contentDescription = "Imagen adjunta",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .padding(vertical = 8.dp),
+                    contentScale = ContentScale.Crop // Ajusta la escala de la imagen
+                )
+            }
+
             HorizontalDivider(color = Color(0xFFF0F0F0))
             Spacer(modifier = Modifier.height(4.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {

@@ -41,8 +41,6 @@ fun LoginScreen(
         Text("Muro Académico", fontSize = 14.sp, color = Color.Gray)
         Text("Inicio por matrícula y contraseña", fontSize = 13.sp, color = Color.Gray)
 
-        Spacer(modifier = Modifier.height(32.dp))
-
         OutlinedTextField(
             value = matricula,
             onValueChange = { matricula = it.uppercase(); error = "" },
@@ -69,7 +67,7 @@ fun LoginScreen(
             Text(error, color = Color.Red, fontSize = 13.sp)
         }
 
-        Spacer(modifier = Modifier.height(28.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         Button(
             onClick = {

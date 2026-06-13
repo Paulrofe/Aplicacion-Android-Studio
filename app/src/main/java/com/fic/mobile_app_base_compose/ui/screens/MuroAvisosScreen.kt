@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun MuroAvisosScreen(
     nombreUsuario: String,
+    matriculaUsuario: String,
     esDocente: Boolean,
     listaAvisos: List<Aviso>,
     estadoSincronizacion: String,
@@ -80,7 +81,7 @@ fun MuroAvisosScreen(
                 title = {
                     Column {
                         Text("Muro de Avisos", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color.White)
-                        Text("Usuario: $nombreUsuario", fontSize = 12.sp, color = Color(0xFF00E5FF))
+                        Text("$nombreUsuario", fontSize = 12.sp, color = Color(0xFF00E5FF))
                     }
                 },
                 actions = {
@@ -114,6 +115,7 @@ fun MuroAvisosScreen(
         if (mostrarDialogo) {
             DialogoNuevoAviso(
                 nombreDocente = nombreUsuario,
+                matriculaDocente = matriculaUsuario, // NUEVO: Pasamos la matrícula del docente
                 onDismiss = { mostrarDialogo = false },
                 onPublicar = { nuevoAviso ->
                     onPublicarAviso(nuevoAviso)
