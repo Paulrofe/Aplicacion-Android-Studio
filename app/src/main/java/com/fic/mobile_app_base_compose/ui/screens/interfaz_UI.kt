@@ -61,6 +61,7 @@ fun interfaz_UI() {
         usuarioActual?.let { usuario ->
             MuroAvisosScreen(
                 nombreUsuario = usuario.nombre,
+                matriculaUsuario = usuario.matricula, // NUEVO: Matrícula del usuario
                 esDocente = usuario.rol == ROL_DOCENTE,
                 listaAvisos = listaAvisos,
                 estadoSincronizacion = estadoSincronizacion,
