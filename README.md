@@ -248,15 +248,15 @@ docs/screenshots/
 
 ### Pantalla de inicio de sesión
 
-![Pantalla de inicio de sesión](C:\Users\pc\StudioProjects\Aplicacion-Android-Studio\docs\screenshots\login.jpg)
+![Pantalla de inicio de sesión](docs/screenshots/login.jpg)
 
 ### Muro de avisos
 
-![Muro de avisos](C:\Users\pc\StudioProjects\Aplicacion-Android-Studio\docs\screenshots\muro-avisos.jpg)
+![Muro de avisos](docs/screenshots/muro-avisos.jpg)
 
 ### Publicación de nuevo aviso
 
-![Publicación de nuevo aviso](C:\Users\pc\StudioProjects\Aplicacion-Android-Studio\docs\screenshots\nuevo-aviso.jpg)
+![Publicación de nuevo aviso](docs/screenshots/nuevo-aviso.jpg)
 
 
 ---
