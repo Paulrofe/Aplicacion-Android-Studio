@@ -83,8 +83,9 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     fun obtenerAvisos(): List<Aviso> {
         val avisos = mutableListOf<Aviso>()
         val db = readableDatabase
+        // CORRECCIÓN: Agregamos 'archivoUri' al SELECT para poder recuperarlo de la base de datos
         val cursor = db.rawQuery(
-            "SELECT id, docente, materia, mensaje, esUrgente FROM avisos ORDER BY id DESC",
+            "SELECT id, docente, materia, mensaje, esUrgente, archivoUri FROM avisos ORDER BY id DESC",
             null
         )
 
@@ -96,7 +97,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                         docente = it.getString(1),
                         materia = it.getString(2),
                         mensaje = it.getString(3),
-                        esUrgente = it.getInt(4) == 1
+                        esUrgente = it.getInt(4) == 1,
+                        archivoUri = it.getString(5) // CORRECCIÓN: Asignamos la ruta de la imagen
                     )
                 )
             }
@@ -116,11 +118,17 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         writableDatabase.insert("avisos", null, values)
     }
 
+    // CAMBIO: Añadimos la operación "DELETE" para eliminar avisos.
+    fun eliminarAviso(id: Int): Boolean {
+        val db = writableDatabase
+        val filasAfectadas = db.delete("avisos", "id = ?", arrayOf(id.toString()))
+        return filasAfectadas > 0
+    }
+
     fun guardarAvisosExternos(avisosApi: List<AvisoApiDto>) {
         val db = writableDatabase
 
         // Evita que se acumulen muchas publicaciones de prueba de la API.
-        // Los avisos creados por docentes se conservan porque tienen origen LOCAL.
         db.delete("avisos", "origen = ?", arrayOf("API"))
 
         avisosApi.forEach { avisoApi ->
