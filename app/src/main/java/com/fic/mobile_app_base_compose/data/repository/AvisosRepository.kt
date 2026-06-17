@@ -26,13 +26,17 @@ class AvisosRepository(
         )
     }
 
+    // CAMBIO: Añadimos la función puente para eliminar avisos locales
+    fun eliminarAvisoLocal(id: Int): Boolean {
+        return databaseHelper.eliminarAviso(id)
+    }
+
     suspend fun sincronizarAvisosExternos(): Boolean = withContext(Dispatchers.IO) {
         try {
             val avisosApi = RetrofitClient.api.obtenerAvisosExternos()
             databaseHelper.guardarAvisosExternos(avisosApi.take(1))
             true
         } catch (e: Exception) {
-            // Offline-first: si no hay internet, la app sigue usando los datos locales.
             false
         }
     }

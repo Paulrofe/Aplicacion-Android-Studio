@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">BioBitacora</string>
+    <!-- Login -->
+    <string name="facultad_titulo">FACULTY OF INFORMATICS</string>
+    <string name="muro_subtitulo">Academic Notice Board</string>
+    <string name="inicio_instruccion">Log in using ID and password</string>
+    <string name="matricula_label">ID / Serial Number</string>
+    <string name="password_label">Password</string>
+    <string name="btn_iniciar_sesion">LOG IN</string>
+    <string name="error_credenciales">Incorrect ID or password</string>
+
+    <!-- Dialogo Nuevo Aviso -->
+    <string name="publicar_aviso_titulo">Publish New Notice</string>
+    <string name="grupo_label">Group</string>
+    <string name="materia_label">Subject</string>
+    <string name="mensaje_label">Message or announcement</string>
+    <string name="adjuntar_imagen">Attach Image</string>
+    <string name="imagen_seleccionada">Image Selected ✓</string>
+    <string name="pregunta_urgente">Is this an urgent notice?</string>
+    <string name="btn_publicar">Publish</string>
+    <string name="btn_cancelar">Cancel</string>
+    <string name="sin_materias">No subjects available</string>
+
+    <!-- Muro de Avisos y Filtros -->
+    <string name="muro_titulo">Notice Board</string>
+    <string name="cerrar_sesion">Log out</string>
+    <string name="filtro_todos">View All</string>
+    <string name="filtro_urgentes">View Urgent Only</string>
+    <string name="agrupar_profesor">Group by Teacher</string>
+    <string name="agrupar_materia">Group by Subject</string>
+    <string name="sincronizar_api">Sync external API</string>
+    <string name="publicaciones_dia">Today\'s publications</string>
+    <string name="sin_avisos">No notices to display.</string>
+    <string name="filtro_label">Filter: %1$s</string>
+
+    <!-- Sincronización y Tarjeta -->
+    <string name="estado_listo">Local data ready</string>
+    <string name="estado_sincronizando">Syncing with external API…</string>
+    <string name="estado_sincronizado">Synced with external API</string>
+    <string name="estado_offline">No connection: showing locally saved data</string>
+    <string name="publicado_hoy">Published today</string>
+    <string name="tag_urgente">URGENT</string>
+</resources>
