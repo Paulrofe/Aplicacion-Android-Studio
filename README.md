@@ -1,185 +1,371 @@
-# BioBitácora
+# Muro Académico FIC
 
-Aplicación móvil para el registro y catalogación de biodiversidad urbana, desarrollada como proyecto académico de la materia de Cómputo Móvil.
-
----
-
-## Descripción
-
-**BioBitácora** permite a los estudiantes actuar como *científicos ciudadanos*, registrando flora y fauna local mediante:
-
-* Geolocalización (GPS)
-* Captura de imágenes
-* Almacenamiento local
-* Consulta de datos desde APIs externas
-* Protección mediante biometría
+Aplicación móvil desarrollada en **Android Studio** con **Kotlin** y **Jetpack Compose**. El proyecto funciona como un muro académico para que docentes publiquen avisos y alumnos puedan consultarlos desde una aplicación móvil.
 
 ---
 
-## Objetivo del Proyecto
+## Descripción del proyecto
 
-Desarrollar una aplicación móvil moderna utilizando:
+**Muro Académico FIC** es una aplicación académica creada para mejorar la comunicación entre docentes y alumnos. La app permite iniciar sesión, identificar el rol del usuario y mostrar un muro con avisos relacionados con materias, clases, actividades, comunicados y mensajes urgentes.
 
-* Arquitectura **MVVM**
-* UI declarativa con **Jetpack Compose**
-* Persistencia local y consumo de APIs
-* Integración con hardware del dispositivo
+El proyecto también incluye una implementación de **persistencia local con SQLite** y una estrategia **offline-first**, lo que permite que la aplicación siga mostrando avisos guardados aunque no exista conexión a internet. Además, consume una **API REST externa** para sincronizar avisos de prueba y guardarlos localmente.
 
 ---
 
-## Objetivos Específicos
+## Funcionalidades principales
 
-* Implementar interfaces modernas con Compose
-* Manejar estado con ViewModel y StateFlow
-* Persistir datos con Room y DataStore
-* Consumir servicios REST (JSON)
-* Integrar cámara y GPS
-* Aplicar autenticación biométrica
+- Inicio de sesión para usuarios registrados.
+- Validación de usuario con matrícula y contraseña.
+- Roles de usuario:
+    - **Docente**
+    - **Alumno**
+- Muro de avisos académicos.
+- Publicación de avisos por docentes.
+- Visualización de avisos por alumnos.
+- Avisos con:
+    - Nombre del docente.
+    - Materia.
+    - Mensaje.
+    - Indicador de urgencia.
+    - Archivo o imagen adjunta mediante URI.
+- Guardado de avisos en base de datos local SQLite.
+- Consumo de API REST externa.
+- Sincronización de avisos externos.
+- Funcionamiento sin conexión mediante estrategia offline-first.
+- Mensajes de estado para indicar si la app está sincronizada o trabajando sin internet.
 
 ---
 
-## Arquitectura
+## Arquitectura utilizada
 
-El proyecto sigue el patrón:
+El proyecto utiliza una estructura organizada por capas, tomando como base una arquitectura tipo **MVVM** y el patrón **Repository**.
 
-**MVVM (Model - View - ViewModel)**
+La aplicación está dividida en:
 
 ```text
-UI (Compose) ↔ ViewModel ↔ Repository ↔ Data (Local/Remote)
+UI / Pantallas Jetpack Compose
+        ↓
+Repository
+        ↓
+Base de datos local SQLite
+        ↓
+API externa REST con Retrofit
+```
+
+### Capas principales
+
+| Capa | Descripción |
+|---|---|
+| `ui/screens` | Contiene las pantallas y componentes visuales hechos con Jetpack Compose. |
+| `data/local` | Contiene la base de datos local SQLite mediante `DatabaseHelper`. |
+| `data/remote` | Contiene la configuración de Retrofit y el servicio para consumir la API REST. |
+| `data/repository` | Centraliza la lógica para obtener avisos locales y sincronizar avisos externos. |
+| `ui/theme` | Contiene colores, temas y tipografía de la aplicación. |
+
+---
+
+## Estrategia offline-first
+
+La aplicación implementa una estrategia **offline-first**, lo que significa que primero trabaja con la información guardada localmente y después intenta sincronizar con internet.
+
+Funcionamiento:
+
+1. Al iniciar sesión, la app carga los avisos guardados en SQLite.
+2. Después intenta conectarse a una API REST externa.
+3. Si hay internet, descarga avisos externos y los guarda en la base local.
+4. Si no hay internet, la app sigue funcionando con los datos almacenados previamente.
+5. El usuario ve un mensaje de estado indicando si la sincronización fue exitosa o si está usando datos locales.
+
+API utilizada:
+
+```text
+https://jsonplaceholder.typicode.com/posts
 ```
 
 ---
 
-## Estructura del Proyecto
+## Estructura del proyecto
 
 ```text
-com.tuuniversidad.biobitacora/
-
-├── ui/
-│   ├── navigation/
-│   ├── screens/
-│   └── theme/
+Aplicacion-Android-Studio/
 │
-├── viewmodel/
+├── README.md
+├── IMPLEMENTACION_OFFLINE_FIRST.md
+├── build.gradle.kts
+├── settings.gradle.kts
 │
-├── data/            # (Se implementará en semanas posteriores)
-│   ├── local/
-│   ├── remote/
-│   └── repository/
+├── app/
+│   ├── build.gradle.kts
+│   ├── CREDENCIALES_MURO_ACADEMICO.txt
+│   │
+│   └── src/main/
+│       ├── AndroidManifest.xml
+│       │
+│       ├── java/com/fic/mobile_app_base_compose/
+│       │   ├── MainActivity.kt
+│       │   ├── BioBitacoraApp.kt
+│       │   │
+│       │   ├── data/
+│       │   │   ├── local/
+│       │   │   │   └── DatabaseHelper.kt
+│       │   │   │
+│       │   │   ├── remote/
+│       │   │   │   ├── AvisoApiDto.kt
+│       │   │   │   ├── AvisoApiService.kt
+│       │   │   │   └── RetrofitClient.kt
+│       │   │   │
+│       │   │   └── repository/
+│       │   │       └── AvisosRepository.kt
+│       │   │
+│       │   ├── ui/
+│       │   │   ├── screens/
+│       │   │   │   ├── Aviso.kt
+│       │   │   │   ├── DialogoNuevoAviso.kt
+│       │   │   │   ├── LoginScreen.kt
+│       │   │   │   ├── MuroAvisosScreen.kt
+│       │   │   │   ├── TarjetaAviso.kt
+│       │   │   │   ├── User.kt
+│       │   │   │   └── interfaz_UI.kt
+│       │   │   │
+│       │   │   └── theme/
+│       │   │       ├── Color.kt
+│       │   │       ├── Theme.kt
+│       │   │       └── Type.kt
+│       │   │
+│       │   ├── viewmodel/
+│       │   └── util/
+│       │
+│       └── res/
+│           ├── drawable/
+│           ├── mipmap/
+│           └── values/
 │
-└── util/
+└── docs/
+    └── screenshots/
 ```
 
-> ⚠️ Nota: No todas las capas están implementadas desde el inicio. Se desarrollarán progresivamente durante el curso.
+---
+
+## Tecnologías empleadas
+
+- **Kotlin**
+- **Android Studio**
+- **Jetpack Compose**
+- **Material 3**
+- **SQLite**
+- **SQLiteOpenHelper**
+- **Retrofit**
+- **Gson Converter**
+- **Kotlin Coroutines**
+- **Coil Compose**
+- **Gradle Kotlin DSL**
+- **Git y GitHub**
 
 ---
 
-## Tecnologías
+## Requisitos previos
 
-* Kotlin
-* Jetpack Compose
-* Navigation Compose
-* ViewModel / StateFlow
+Antes de instalar y ejecutar el proyecto se necesita:
 
-> En semanas posteriores:
-
-* Room (SQLite)
-* Retrofit
-* DataStore
-* Biometric Authentication
+- Android Studio instalado.
+- JDK 11 o superior.
+- Gradle configurado desde Android Studio.
+- Emulador Android o celular físico con depuración USB activada.
+- Conexión a internet para probar la sincronización con la API externa.
 
 ---
 
-## Cronograma de Desarrollo
+## Instrucciones de instalación
 
-### Semana 1: UI & Navegación
+### 1. Clonar el repositorio
 
-* Configuración del proyecto
-* Pantallas base
-* Navegación entre vistas
+```bash
+git clone https://github.com/Paulrofe/Aplicacion-Android-Studio.git
+```
 
-### Semana 2: Estado & MVVM
+### 2. Entrar a la carpeta del proyecto
 
-* ViewModels
-* Manejo de estado
-* Datos simulados
+```bash
+cd Aplicacion-Android-Studio
+```
 
-### Semana 3: Persistencia Local
+### 3. Abrir en Android Studio
 
-* Base de datos con Room
-* DataStore
+1. Abre **Android Studio**.
+2. Selecciona **Open**.
+3. Busca la carpeta del proyecto.
+4. Abre el proyecto.
+5. Espera a que termine la sincronización de Gradle.
 
-### Semana 4: API & Conectividad
+### 4. Sincronizar Gradle
 
-* Consumo de servicios REST
-* Modo offline
+Si el proyecto no sincroniza automáticamente:
 
-### Semana 5: Sensores & Seguridad
+1. Ve a **File**.
+2. Selecciona **Sync Project with Gradle Files**.
+3. Espera a que Android Studio descargue las dependencias.
 
-* Cámara
-* GPS
-* Biometría
+### 5. Ejecutar la aplicación
 
-### Semana 6: Testing & Release
-
-* Pruebas unitarias
-* APK firmado
-* Ofuscación
-
----
-
-## Reglas del Proyecto
-
-* No hardcodear textos → usar recursos (`strings.xml`)
-* No mezclar lógica en Composables
-* Seguir patrón MVVM
-* Commits frecuentes y claros
-* Código limpio y organizado
+1. Selecciona un emulador o conecta un celular físico.
+2. Presiona **Run**.
+3. Espera a que la app compile e inicie.
 
 ---
 
-## Estado Actual
+## Permisos utilizados
 
-Proyecto base inicial
-- UI básica
-- Navegación
-- Datos simulados
+El proyecto utiliza el permiso de internet para consumir la API REST externa:
 
----
-
-## Notas para el Alumno
-
-* Este repositorio es una **base inicial**
-* Cada semana deberás extender la funcionalidad
-* No todas las características están implementadas aún
-* Sigue las instrucciones de clase para cada entrega
+```xml
+<uses-permission android:name="android.permission.INTERNET" />
+```
 
 ---
 
-## Funcionalidades Esperadas
+## Dependencias principales
 
-* Registro de usuario
-* Registro de avistamientos
-* Captura de imagen
-* Geolocalización
-* Catálogo de especies desde API
-* Acceso protegido con biometría
+El proyecto utiliza dependencias para Jetpack Compose, Material 3, Retrofit, Gson y corrutinas.
+
+Ejemplo de dependencias importantes:
+
+```kotlin
+implementation("com.squareup.retrofit2:retrofit:2.11.0")
+implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
+implementation("io.coil-kt:coil-compose:2.5.0")
+```
 
 ---
 
-## Evaluación
+## Capturas de pantalla
 
-El proyecto será evaluado con base en:
+Las capturas deben colocarse dentro de la carpeta:
 
-* Funcionalidad
-* Arquitectura
-* Calidad del código
-* Uso correcto de tecnologías
-* Cumplimiento de requisitos
+```text
+docs/screenshots/
+```
+
+### Pantalla de inicio de sesión
+
+![Pantalla de inicio de sesión](docs/screenshots/login.jpg)
+
+### Muro de avisos
+
+![Muro de avisos](docs/screenshots/muro-avisos.jpg)
+
+### Publicación de nuevo aviso
+
+![Publicación de nuevo aviso](docs/screenshots/nuevo-aviso.jpg)
+
+
+---
+
+
+
+---
+
+## Base de datos local
+
+El proyecto utiliza SQLite mediante la clase:
+
+```text
+data/local/DatabaseHelper.kt
+```
+
+La base de datos contiene principalmente dos tablas:
+
+| Tabla | Descripción |
+|---|---|
+| `usuarios` | Guarda usuarios con matrícula, nombre, rol y contraseña. |
+| `avisos` | Guarda avisos creados localmente y avisos sincronizados desde la API. |
+
+Campos principales de la tabla `avisos`:
+
+- `id`
+- `apiId`
+- `docente`
+- `materia`
+- `mensaje`
+- `esUrgente`
+- `archivoUri`
+- `origen`
+- `fecha`
+
+---
+
+## API externa REST
+
+La app consume la API pública de JSONPlaceholder:
+
+```text
+https://jsonplaceholder.typicode.com/posts
+```
+
+Archivos relacionados:
+
+```text
+data/remote/AvisoApiDto.kt
+data/remote/AvisoApiService.kt
+data/remote/RetrofitClient.kt
+```
+
+La información externa se convierte en avisos académicos y se guarda en la base de datos local.
+
+---
+
+## Estado actual del proyecto
+
+El proyecto ya cuenta con:
+
+- Interfaz principal con Jetpack Compose.
+- Pantalla de login.
+- Muro de avisos.
+- Publicación de avisos.
+- Base de datos local SQLite.
+- Consumo de API REST externa.
+- Repositorio para centralizar datos locales y remotos.
+- Estrategia offline-first.
+
+---
+
+## Comandos útiles de Git
+
+Ver estado de cambios:
+
+```bash
+git status
+```
+
+Agregar cambios:
+
+```bash
+git add .
+```
+
+Crear commit:
+
+```bash
+git commit -m "Actualizar README del proyecto"
+```
+
+Subir cambios:
+
+```bash
+git push
+```
+
+---
+
+## Creadores
+
+Paul Enrique Rodriguez Fernandez
+
+Jose Daniel Meza Felix
+
 
 ---
 
 ## Licencia
 
 Uso académico.
-

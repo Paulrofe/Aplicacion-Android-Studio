@@ -1,0 +1,21 @@
+CREDENCIALES PARA PROBAR LA APP
+
+MAESTROS / DOCENTES
+Matrícula: M001 | Contraseña: 123456 | Nombre: Mtro. Alexis Moises Montaño Araujo
+Matrícula: M002 | Contraseña: 123456 | Nombre: Mtra. Sandra Luz Lara Devora
+Matrícula: M003 | Contraseña: 123456 | Nombre: Mtro. Alejandro Guajardo Cruztitla
+Matrícula: M004 | Contraseña: 123456 | Nombre: Mtro. Julio César Solís Velázquez
+Matrícula: M005 | Contraseña: 123456 | Nombre: Mtro. Juan Ulisses Gallardo Zazueta
+Matrícula: M006 | Contraseña: 123456 | Nombre: Mtra. Cynthia Patricia Villar Piña
+
+ALUMNOS
+Matrícula: A001 | Contraseña: 123456 | Nombre: Alumno Daniel Meza
+Matrícula: A002 | Contraseña: 123456 | Nombre: Alumno Paul Rodriguez
+Matrícula: A003 | Contraseña: 123456 | Nombre: Alumno Uriel Retamoza
+Matrícula: A004 | Contraseña: 123456 | Nombre: Alumno Axel Alejandro
+
+NOTA:
+- El inicio de sesión es con matrícula y contraseña.
+- Si entra un maestro, puede publicar avisos.
+- Si entra un alumno, solo puede leer los avisos.
+- Los avisos quedan guardados en SQLite local: muro_academico.db

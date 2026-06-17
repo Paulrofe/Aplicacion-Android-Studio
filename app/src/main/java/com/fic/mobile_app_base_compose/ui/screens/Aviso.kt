@@ -5,5 +5,6 @@ data class Aviso(
     val docente: String,
     val materia: String,
     val mensaje: String,
-    val esUrgente: Boolean
+    val esUrgente: Boolean,
+    val archivoUri: String? = null // NUEVO: Ruta de la imagen adjunta
 )
