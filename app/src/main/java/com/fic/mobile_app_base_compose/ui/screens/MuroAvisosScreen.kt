@@ -13,9 +13,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fic.mobile_app_base_compose.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,6 +29,7 @@ fun MuroAvisosScreen(
     estadoSincronizacion: String,
     onSincronizar: () -> Unit,
     onPublicarAviso: (Aviso) -> Unit,
+    onEliminarAviso: (Int) -> Unit,
     onCerrarSesion: () -> Unit
 ) {
     var mostrarDialogo by remember { mutableStateOf(false) }
@@ -46,7 +49,7 @@ fun MuroAvisosScreen(
                 navigationIcon = {
                     Box {
                         IconButton(onClick = { menuExpandido = true }) {
-                            Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menú de filtros", tint = Color.White)
+                            Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menú", tint = Color.White)
                         }
 
                         DropdownMenu(
@@ -54,25 +57,25 @@ fun MuroAvisosScreen(
                             onDismissRequest = { menuExpandido = false }
                         ) {
                             DropdownMenuItem(
-                                text = { Text("Ver Todos", fontWeight = if (filtroActual == "Todos") FontWeight.Bold else FontWeight.Normal) },
+                                text = { Text(stringResource(R.string.filtro_todos), fontWeight = if (filtroActual == "Todos") FontWeight.Bold else FontWeight.Normal) },
                                 onClick = { filtroActual = "Todos"; menuExpandido = false }
                             )
                             DropdownMenuItem(
-                                text = { Text("Ver Solo Urgentes", fontWeight = if (filtroActual == "Urgentes") FontWeight.Bold else FontWeight.Normal) },
+                                text = { Text(stringResource(R.string.filtro_urgentes), fontWeight = if (filtroActual == "Urgentes") FontWeight.Bold else FontWeight.Normal) },
                                 onClick = { filtroActual = "Urgentes"; menuExpandido = false }
                             )
                             HorizontalDivider()
                             DropdownMenuItem(
-                                text = { Text("Agrupar por Profesor", fontWeight = if (filtroActual == "Por Docente") FontWeight.Bold else FontWeight.Normal) },
+                                text = { Text(stringResource(R.string.agrupar_profesor), fontWeight = if (filtroActual == "Por Docente") FontWeight.Bold else FontWeight.Normal) },
                                 onClick = { filtroActual = "Por Docente"; menuExpandido = false }
                             )
                             DropdownMenuItem(
-                                text = { Text("Agrupar por Materia", fontWeight = if (filtroActual == "Por Materia") FontWeight.Bold else FontWeight.Normal) },
+                                text = { Text(stringResource(R.string.agrupar_materia), fontWeight = if (filtroActual == "Por Materia") FontWeight.Bold else FontWeight.Normal) },
                                 onClick = { filtroActual = "Por Materia"; menuExpandido = false }
                             )
                             HorizontalDivider()
                             DropdownMenuItem(
-                                text = { Text("Sincronizar API externa") },
+                                text = { Text(stringResource(R.string.sincronizar_api)) },
                                 onClick = { onSincronizar(); menuExpandido = false }
                             )
                         }
@@ -80,13 +83,13 @@ fun MuroAvisosScreen(
                 },
                 title = {
                     Column {
-                        Text("Muro de Avisos", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color.White)
-                        Text("$nombreUsuario", fontSize = 12.sp, color = Color(0xFF00E5FF))
+                        Text(stringResource(R.string.muro_titulo), fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color.White)
+                        Text(nombreUsuario, fontSize = 12.sp, color = Color(0xFF00E5FF))
                     }
                 },
                 actions = {
                     TextButton(onClick = onCerrarSesion) {
-                        Text("Cerrar sesión", color = Color.White, fontSize = 14.sp)
+                        Text(stringResource(R.string.cerrar_sesion), color = Color.White, fontSize = 14.sp)
                         Spacer(modifier = Modifier.width(6.dp))
                         Icon(
                             imageVector = Icons.Filled.ExitToApp,
@@ -115,7 +118,7 @@ fun MuroAvisosScreen(
         if (mostrarDialogo) {
             DialogoNuevoAviso(
                 nombreDocente = nombreUsuario,
-                matriculaDocente = matriculaUsuario, // NUEVO: Pasamos la matrícula del docente
+                matriculaDocente = matriculaUsuario,
                 onDismiss = { mostrarDialogo = false },
                 onPublicar = { nuevoAviso ->
                     onPublicarAviso(nuevoAviso)
@@ -132,23 +135,29 @@ fun MuroAvisosScreen(
             item {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     Column {
-                        Text("Publicaciones del día", fontSize = 14.sp, color = Color.Gray)
+                        Text(stringResource(R.string.publicaciones_dia), fontSize = 14.sp, color = Color.Gray)
                         Text(estadoSincronizacion, fontSize = 12.sp, color = Color.Gray)
                     }
-                    Text("Filtro: $filtroActual", fontSize = 12.sp, color = Color(0xFF00E5FF), fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.filtro_label, filtroActual), fontSize = 12.sp, color = Color(0xFF00E5FF), fontWeight = FontWeight.Bold)
                 }
             }
 
             if (avisosFiltrados.isEmpty()) {
                 item {
                     Box(modifier = Modifier.fillMaxWidth().padding(top = 40.dp), contentAlignment = Alignment.Center) {
-                        Text("No hay avisos para mostrar.", color = Color.Gray)
+                        Text(stringResource(R.string.sin_avisos), color = Color.Gray)
                     }
                 }
             }
 
             items(avisosFiltrados) { aviso ->
-                TarjetaAviso(aviso = aviso)
+                val esDuenoDelAviso = aviso.docente == nombreUsuario
+
+                TarjetaAviso(
+                    aviso = aviso,
+                    esDueno = esDuenoDelAviso,
+                    onEliminarClick = { onEliminarAviso(aviso.id) }
+                 )
             }
         }
     }
