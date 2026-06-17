@@ -17,6 +17,8 @@ import android.content.Context
 import java.io.File
 import java.io.FileOutputStream
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.fic.mobile_app_base_compose.R
 
 // 1. NUEVO: Diccionario de materias por docente
 private val materiasPorDocente = mapOf(
@@ -104,8 +106,10 @@ fun DialogoNuevoAviso(
     onDismiss: () -> Unit,
     onPublicar: (Aviso) -> Unit
 ) {
+    val context = LocalContext.current
+    val sinMateriasTexto = stringResource(id = R.string.sin_materias)
     val listaMateriasDelDocente = materiasPorDocente[matriculaDocente] ?: emptyList()
-    var materiaSeleccionada by remember { mutableStateOf(listaMateriasDelDocente.firstOrNull() ?: "Sin materias") }
+    var materiaSeleccionada by remember { mutableStateOf(listaMateriasDelDocente.firstOrNull() ?: sinMateriasTexto) }
     var materiaExpandida by remember { mutableStateOf(false) }
 
     // NUEVO: Lógica para calcular grupos basados en la materia seleccionada
@@ -133,11 +137,10 @@ fun DialogoNuevoAviso(
     ) { uri: Uri? ->
         uriArchivo = uri
     }
-    val context = LocalContext.current
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Publicar Nuevo Aviso", fontWeight = FontWeight.Bold) },
+        title = { Text(text = stringResource(id = R.string.publicar_aviso_titulo), fontWeight = FontWeight.Bold) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
 
@@ -150,7 +153,7 @@ fun DialogoNuevoAviso(
                         value = grupoSeleccionado,
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("Grupo") },
+                        label = { Text(stringResource(id = R.string.grupo_label)) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = grupoExpandido) },
                         modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable).fillMaxWidth(),
                         colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors()
@@ -162,7 +165,7 @@ fun DialogoNuevoAviso(
                     ) {
                         gruposDisponibles.forEach { grupo ->
                             DropdownMenuItem(
-                                text = { Text(text = "Grupo $grupo") },
+                                text = { Text(text = "${stringResource(id = R.string.grupo_label)} $grupo") },
                                 onClick = {
                                     grupoSeleccionado = grupo
                                     grupoExpandido = false
@@ -185,7 +188,7 @@ fun DialogoNuevoAviso(
                         value = materiaSeleccionada,
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("Materia") },
+                        label = { Text(stringResource(id = R.string.materia_label)) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = materiaExpandida) },
                         modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable).fillMaxWidth(),
                         colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors()
@@ -211,24 +214,29 @@ fun DialogoNuevoAviso(
                 OutlinedTextField(
                     value = mensaje,
                     onValueChange = { mensaje = it },
-                    label = { Text("Mensaje o aviso") },
+                    label = { Text(stringResource(id = R.string.mensaje_label)) },
                     modifier = Modifier.fillMaxWidth()
                 )
 
                 // 4. Checkbox de Urgencia
                 // NUEVO: Botón para adjuntar archivo
                 OutlinedButton(
-                    onClick = { filePickerLauncher.launch("image */*") }, // Usa "*/*" si quieres permitir PDFs o documentos
+                    onClick = { filePickerLauncher.launch("image/*") }, // Usa "*/*" si quieres permitir PDFs o documentos
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(Icons.Filled.AddCircle, contentDescription = "Adjuntar")
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(if (uriArchivo == null) "Adjuntar Imagen" else "Imagen Seleccionada ✓")
+                    Text(
+                        text = if (uriArchivo == null) 
+                            stringResource(id = R.string.adjuntar_imagen) 
+                        else 
+                            stringResource(id = R.string.imagen_seleccionada)
+                    )
                 }
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(checked = esUrgente, onCheckedChange = { esUrgente = it })
-                    Text("¿Es un aviso urgente?")
+                    Text(stringResource(id = R.string.pregunta_urgente))
                 }
             }
         },
@@ -245,7 +253,7 @@ fun DialogoNuevoAviso(
                             Aviso(
                                 id = 0,
                                 docente = nombreDocente,
-                                materia = "$materiaSeleccionada (Grupo $grupoSeleccionado)",
+                                materia = "$materiaSeleccionada (${context.getString(R.string.grupo_label)} $grupoSeleccionado)",
                                 mensaje = mensaje,
                                 esUrgente = esUrgente,
                                 archivoUri = rutaLocalGuardada // Guardamos la ruta permanente
@@ -254,9 +262,13 @@ fun DialogoNuevoAviso(
                     }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0F2027))
-            ) { Text("Publicar") }
+            ) { Text(stringResource(id = R.string.btn_publicar)) }
         },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancelar") } }
+        dismissButton = { 
+            TextButton(onClick = onDismiss) { 
+                Text(stringResource(id = R.string.btn_cancelar)) 
+            } 
+        }
     )
 }
 
