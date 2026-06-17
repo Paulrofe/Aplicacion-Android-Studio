@@ -1,3 +1,43 @@
 <resources>
-    <string name="app_name">mobile-app-base-compose</string>
+    <string name="app_name">BioBitacora</string>
+    <!-- Login -->
+    <string name="facultad_titulo">FACULTAD DE INFORMÁTICA</string>
+    <string name="muro_subtitulo">Muro Académico</string>
+    <string name="inicio_instruccion">Inicio por matrícula y contraseña</string>
+    <string name="matricula_label">Matrícula</string>
+    <string name="password_label">Contraseña</string>
+    <string name="btn_iniciar_sesion">INICIAR SESIÓN</string>
+    <string name="error_credenciales">Matrícula o contraseña incorrecta</string>
+
+    <!-- Dialogo Nuevo Aviso -->
+    <string name="publicar_aviso_titulo">Publicar Nuevo Aviso</string>
+    <string name="grupo_label">Grupo</string>
+    <string name="materia_label">Materia</string>
+    <string name="mensaje_label">Mensaje o aviso</string>
+    <string name="adjuntar_imagen">Adjuntar Imagen</string>
+    <string name="imagen_seleccionada">Imagen Seleccionada ✓</string>
+    <string name="pregunta_urgente">¿Es un aviso urgente?</string>
+    <string name="btn_publicar">Publicar</string>
+    <string name="btn_cancelar">Cancelar</string>
+    <string name="sin_materias">Sin materias</string>
+
+    <!-- NUEVOS: Muro de Avisos y Filtros -->
+    <string name="muro_titulo">Muro de Avisos</string>
+    <string name="cerrar_sesion">Cerrar sesión</string>
+    <string name="filtro_todos">Ver Todos</string>
+    <string name="filtro_urgentes">Ver Solo Urgentes</string>
+    <string name="agrupar_profesor">Agrupar por Profesor</string>
+    <string name="agrupar_materia">Agrupar por Materia</string>
+    <string name="sincronizar_api">Sincronizar API externa</string>
+    <string name="publicaciones_dia">Publicaciones del día</string>
+    <string name="sin_avisos">No hay avisos para mostrar.</string>
+    <string name="filtro_label">Filtro: %1$s</string>
+
+    <!-- NUEVOS: Sincronización y Tarjeta -->
+    <string name="estado_listo">Datos locales listos</string>
+    <string name="estado_sincronizando">Sincronizando con API externa…</string>
+    <string name="estado_sincronizado">Sincronizado con API externa</string>
+    <string name="estado_offline">Sin conexión: mostrando datos guardados localmente</string>
+    <string name="publicado_hoy">Publicado hoy</string>
+    <string name="tag_urgente">URGENTE</string>
 </resources>
